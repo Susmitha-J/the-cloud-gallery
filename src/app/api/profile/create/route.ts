@@ -7,9 +7,12 @@ export async function POST(req: Request) {
   if (!userData?.user) return NextResponse.redirect(new URL("/auth", req.url));
 
   const form = await req.formData();
-  const handle = String(form.get("handle") || "").trim();
+  
+  const handle = String(form.get("handle") || "").trim().toLowerCase();
   const display_name = String(form.get("display_name") || "").trim();
   const statement = String(form.get("statement") || "").trim();
+
+
 
   if (!handle || !display_name) {
     return NextResponse.json({ error: "Missing handle/display_name" }, { status: 400 });

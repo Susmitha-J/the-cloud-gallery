@@ -13,16 +13,15 @@ export async function createSupabaseServerClient() {
         return cookieStore.getAll();
       },
       setAll(cookiesToSet) {
-        // In Server Components, cookies are read-only, so set() may not exist.
-        // In Route Handlers / Middleware, set() exists and this works.
-        const canSetCookies =
-          typeof (cookieStore as any).set === "function";
-
-        if (!canSetCookies) return;
-
-        cookiesToSet.forEach(({ name, value, options }) => {
-          (cookieStore as any).set(name, value, options);
-        });
+        // Next.js blocks cookie writes during Server Component rendering.
+        // Cookie writes are handled in Middleware / Route Handlers.
+        try {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            cookieStore.set(name, value, options);
+          });
+        } catch {
+          // swallow in Server Components
+        }
       },
     },
   });

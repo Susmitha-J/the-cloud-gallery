@@ -1,26 +1,34 @@
+import Link from "next/link";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import ArtistHero from "@/components/ArtistHero";
 import GalleryGrid from "@/components/GalleryGrid";
-import Link from "next/link";
 
 export default async function ArtistPage({
   params,
 }: {
-  params: { handle: string };
+  params: Promise<{ handle: string }>;
 }) {
+  const { handle } = await params; // ✅ unwrap params
   const supabase = await createSupabaseServerClient();
+
+  const normalizedHandle = handle.trim().toLowerCase();
 
   const { data: artist } = await supabase
     .from("artist_profiles")
     .select("*")
-    .eq("handle", params.handle)
+    .eq("handle", normalizedHandle)
     .maybeSingle();
 
   if (!artist) {
     return (
       <main className="space-y-4">
         <h1 className="text-2xl font-semibold">Artist not found</h1>
-        <Link className="underline text-sm" href="/">Back home</Link>
+        <p className="text-sm text-neutral-600">
+          No profile exists for: <span className="font-mono">{handle}</span>
+        </p>
+        <Link className="underline text-sm" href="/">
+          Back home
+        </Link>
       </main>
     );
   }

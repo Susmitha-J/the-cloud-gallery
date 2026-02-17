@@ -1,20 +1,26 @@
 import "./globals.css";
+import { Inter, Fraunces } from "next/font/google";
+const fontSans = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
 
-export const metadata = {
-  title: "Art Exhibit MVP",
-  description: "Artists post work. Visitors browse. Search later.",
-};
+const fontDisplay = Fraunces({
+  subsets: ["latin"],
+  variable: "--font-display",
+  weight: ["400", "600", "700"],
+});
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+const fontLogo = Fraunces({
+  subsets: ["latin"],
+  variable: "--font-logo",
+  weight: ["700", "800", "900"],
+});
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className="min-h-screen bg-neutral-50 text-neutral-900">
-        <div className="mx-auto max-w-6xl px-4 py-8">{children}</div>
-      </body>
+    <html lang="en" className={`${fontSans.variable} ${fontDisplay.variable}`}>
+      <body>{children}</body>
     </html>
   );
 }

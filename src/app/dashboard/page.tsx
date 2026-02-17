@@ -1,24 +1,14 @@
 import Link from "next/link";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
 
 export default async function DashboardPage() {
   const supabase = await createSupabaseServerClient();
   const { data: userData } = await supabase.auth.getUser();
 
   if (!userData?.user) {
-    return (
-      <main className="space-y-4">
-        <h1 className="text-2xl font-semibold">Dashboard</h1>
-        <p className="text-sm text-neutral-600">
-          You need to{" "}
-          <Link className="underline" href="/auth">
-            sign in
-          </Link>
-          .
-        </p>
-      </main>
-    );
-  }
+      redirect("/auth");
+  }  
 
   // Load existing artist profile (if any)
   const { data: profile } = await supabase
